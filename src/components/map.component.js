@@ -5,6 +5,7 @@ import ClusteredMapView from 'react-native-maps-super-cluster';
 import {View} from 'react-native';
 import axios from 'axios';
 import * as d3 from 'd3';
+import VirusDataRepository from '../repos/VirusDataRepository';
 
 const INIT_REGION = {
   latitude: 41.8962667,
@@ -29,14 +30,9 @@ class MapComponent extends React.Component {
 
 
   componentDidMount() {
-    axios.get('http://127.0.0.1:8000/api/virus/all', {
-      headers: {
-        'authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiY2RmYzc0YWUzNmVkYWQ5MDNjNWNiODMyNzhlZjE0NjhiYjQ1NTVlY2QzYWUxY2VmOGVlYWIwZTVhYzQ3NmI5ZmMwYWU4NmJjZTEzMTdkMjIiLCJpYXQiOjE1ODMxNTY0MDAsIm5iZiI6MTU4MzE1NjQwMCwiZXhwIjoxNjE0NjkyNDAwLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.QZS4r8_nLZuZCqJ5o_-AoZ7ito3GMIlrMObkAfUs7RPJqj2dh4v3_2Nn9nxL6CXf8Z_0UyKJuflSOk03478RUneTgNb8TwdgA7G16DGsNDK9sd7PmBY55Gx7b-8jINTsGmCafBUvxEZ0Jk7NJlZQm2Q6s7mpCMjbCKpFgtQDerriq8ycqJ1bUnXqn29ScQhAdmAr_xOFPn262PuZmGjvS5BbLtmcAvnMSkZOggBxCMKI-l7-wDR2YYTnP-nPYgdKUTPRrzeNFJD4nOJAFv8dy7LdFs-1OvVQTycrelOSzwwPr-16g9Pi3rGgPVPvG6kFSuKGwafIEeTi_jm3vlh5q_TeXw2TsSpxvhwDcplojhU1Qo13eU1O6KYoiUfIBjm0blFjIddw3Oa8x4KBKgGeQGmyIpZ9Up8lu7pBPQy_jf4TVgS1A8lOxraLk6TrXSct8XHNUqH-c32_jT8vdq0LBgNMusMJ0oK6BvSSX95LaGqD4KREC2SPMR9_rhyznDsHV2ssIjM5QwwCWBqesALKHAA36YqwGG8x9Z3URyuXn93IEQMtcJK3SmrRz057w2Tk_r-3lFqc1RNmCCajneGtrZOONMiNvKcP87ruOCp-sEdWX8Ur93Q5LSw9u5OOoZIoWVGsNpR9HuIuWMpYrzPb9ywzCBoqcdCqKsajnYeWtXk',
-      },
-    })
-      .then(response => {
-        console.log(response);
 
+    VirusDataRepository.all()
+      .then(response => {
         let counts = response.data.map((location) => {
           return location.total_confirmed;
         });
@@ -45,7 +41,11 @@ class MapComponent extends React.Component {
         this.max = Math.max(...counts);
 
         this.setState({data: response.data, loading: false});
-      });
+      })
+      .catch(reason => {
+        // TODO: CREATE ERROR MESSAGE
+        this.setState({loading: false})
+      })
   }
 
   map;
@@ -158,7 +158,6 @@ class MapComponent extends React.Component {
 
   render() {
     if (this.state.loading) return <Text>Loading...</Text>;
-
     return (
       <ClusteredMapView
         style={{flex: 1}}
@@ -169,7 +168,8 @@ class MapComponent extends React.Component {
         }}
         extent={160}
         renderMarker={this.renderMarker}
-        renderCluster={this.renderCluster}/>
+        renderCluster={this.renderCluster}
+      />
     );
   }
 }

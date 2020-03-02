@@ -40,6 +40,8 @@ target 'COVID19' do
   # Make also sure you have use_frameworks! enabled
   use_frameworks!
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
   target 'COVID19Tests' do
     inherit! :search_paths
     # Pods for testing
