@@ -10,7 +10,7 @@ class MapPage extends React.Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <TopNavigation title='COVID-19 MAP' alignment='center' />
+        <TopNavigation title='COVID-19 MAP' alignment='center' titleStyle={{color: 'rgb(0,101,50)'}}/>
         <MapComponent />
       </SafeAreaView>
     );

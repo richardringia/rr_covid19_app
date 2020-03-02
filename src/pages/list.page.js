@@ -10,7 +10,7 @@ class ListPage extends React.Component {
     render() {
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <TopNavigation title='COVID-19 LIST' alignment='center' />
+                <TopNavigation title='COVID-19 LIST' alignment='center'  titleStyle={{color: 'rgb(0,101,50)'}}/>
                 <ListComponent />
             </SafeAreaView>
         );

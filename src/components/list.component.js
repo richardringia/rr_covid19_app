@@ -25,7 +25,7 @@ class ListComponent extends React.Component {
 
         this.setState({
           data: response.data.map((location) => {
-            console.log(location);
+            // console.log(location);
           }),
           loading: false,
         });

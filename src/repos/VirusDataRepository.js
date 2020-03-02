@@ -3,9 +3,9 @@ import axios from 'axios';
 export default class VirusDataRepository {
   static all() {
     return new Promise((resolve, reject) => {
-      axios.get('http://127.0.0.1:8000/api/virus/all', {
+      axios.get('http://covid-19-api.richardringia.com/api/virus/all', {
         headers: {
-          'authorization': '3f46fe-d0b0a9-8a2d83-85095d-5d8623',
+          'authorization': 'dbd0a3-1dd1a3-1c68d6-696db9-1df3fc',
         },
       })
         .then(response => {

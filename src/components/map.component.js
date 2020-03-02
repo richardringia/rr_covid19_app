@@ -6,6 +6,7 @@ import {View} from 'react-native';
 import axios from 'axios';
 import * as d3 from 'd3';
 import VirusDataRepository from '../repos/VirusDataRepository';
+import MapMarker from './map.marker.component';
 
 const INIT_REGION = {
   latitude: 41.8962667,
@@ -44,8 +45,8 @@ class MapComponent extends React.Component {
       })
       .catch(reason => {
         // TODO: CREATE ERROR MESSAGE
-        this.setState({loading: false})
-      })
+        this.setState({loading: false});
+      });
   }
 
   map;
@@ -67,8 +68,11 @@ class MapComponent extends React.Component {
       total = total + point.properties.item.total_confirmed;
     }
     return (
-      <Marker coordinate={coordinate} onPress={onPress} style={this.getCircleStyle(total)}>
-        <View >
+      <MapMarker coordinate={{
+        latitude: Number(coordinate.latitude),
+        longitude: Number(coordinate.longitude),
+      }} onPress={onPress}>
+        <View  style={this.getCircleStyle(total)}>
           <Text style={this.getTextCircleStyle(total)}>
             {total}
           </Text>
@@ -90,7 +94,7 @@ class MapComponent extends React.Component {
             IMPORTANT: be aware that Marker's onPress event isn't really consistent when using Callout.
            */
         }
-      </Marker>
+      </MapMarker>
     );
   };
 
@@ -116,13 +120,13 @@ class MapComponent extends React.Component {
     let size = this.getCount(count);
 
     return {
-      borderRadius: size/2,
+      borderRadius: size / 2,
       borderWidth: 3,
-      borderColor: 'rgb(51,103,255)',
+      borderColor: 'rgb(0,101,50)',
       height: size,
       width: size,
-      backgroundColor: 'rgba(40, 40, 40, 0.8)',
-    }
+      backgroundColor: 'rgba(58,169,53, 0.4)',
+    };
   }
 
   /**
@@ -135,9 +139,9 @@ class MapComponent extends React.Component {
     return {
       lineHeight: size,
       textAlign: 'center',
-      color: 'rgb(51,103,255)',
-      fontWeight: 'bold'
-    }
+      color: 'rgb(0,101,50)',
+      fontWeight: 'bold',
+    };
   }
 
   /**
@@ -146,13 +150,16 @@ class MapComponent extends React.Component {
    * @returns {*}
    */
   renderMarker = (data) => {
-    // console.log(data);
     return (
-      <Marker coordinate={data.location} style={this.getCircleStyle(data.total_confirmed)} key={data.id || Math.random()}>
-        <View>
+      <MapMarker coordinate={{
+        latitude: parseFloat(data.location.latitude),
+        longitude: parseFloat(data.location.longitude),
+      }}
+              key={data.id || Math.random()}>
+        <View style={this.getCircleStyle(data.total_confirmed)}>
           <Text style={this.getTextCircleStyle(data.total_confirmed)}>{data.total_confirmed}</Text>
         </View>
-      </Marker>
+      </MapMarker>
     );
   };
 
@@ -161,7 +168,13 @@ class MapComponent extends React.Component {
     return (
       <ClusteredMapView
         style={{flex: 1}}
-        data={this.state.data}
+        data={this.state.data.map((location) => {
+          location.location = {
+            latitude: parseFloat(location.location.latitude.toString()),
+            longitude: parseFloat(location.location.longitude.toString()),
+          }
+          return location;
+        })}
         initialRegion={INIT_REGION}
         ref={(r) => {
           this.map = r;
