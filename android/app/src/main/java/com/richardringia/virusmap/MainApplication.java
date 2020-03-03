@@ -1,4 +1,4 @@
-package com.covid19;
+package com.richardringia.virusmap;
 
 import android.app.Application;
 import android.content.Context;

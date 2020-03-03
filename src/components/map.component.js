@@ -34,14 +34,14 @@ class MapComponent extends React.Component {
 
     VirusDataRepository.all()
       .then(response => {
-        let counts = response.data.map((location) => {
+        let counts = response.map((location) => {
           return location.total_confirmed;
         });
 
         this.min = Math.min(...counts);
         this.max = Math.max(...counts);
 
-        this.setState({data: response.data, loading: false});
+        this.setState({data: response, loading: false});
       })
       .catch(reason => {
         // TODO: CREATE ERROR MESSAGE
@@ -71,8 +71,8 @@ class MapComponent extends React.Component {
       <MapMarker coordinate={{
         latitude: Number(coordinate.latitude),
         longitude: Number(coordinate.longitude),
-      }} onPress={onPress}>
-        <View  style={this.getCircleStyle(total)}>
+      }} onPress={onPress} style={this.getMarkerStyle(total)}>
+        <View style={this.getCircleStyle(total)}>
           <Text style={this.getTextCircleStyle(total)}>
             {total}
           </Text>
@@ -118,7 +118,9 @@ class MapComponent extends React.Component {
    */
   getCircleStyle(count) {
     let size = this.getCount(count);
-
+    if (isNaN(size)) {
+      size = 40;
+    }
     return {
       borderRadius: size / 2,
       borderWidth: 3,
@@ -129,6 +131,22 @@ class MapComponent extends React.Component {
     };
   }
 
+
+  /**
+   * Get the style of the marker with the correct count
+   * @param count
+   */
+  getMarkerStyle(count) {
+    let size = this.getCount(count);
+    if (isNaN(size)) {
+      size = 40;
+    }
+    return {
+      height: size,
+      width: size,
+    };
+  }
+
   /**
    * Get the circle text style
    * @param count
@@ -136,6 +154,9 @@ class MapComponent extends React.Component {
    */
   getTextCircleStyle(count) {
     let size = this.getCount(count);
+    if (isNaN(size)) {
+      size = 40;
+    }
     return {
       lineHeight: size,
       textAlign: 'center',
@@ -155,7 +176,8 @@ class MapComponent extends React.Component {
         latitude: parseFloat(data.location.latitude),
         longitude: parseFloat(data.location.longitude),
       }}
-              key={data.id || Math.random()}>
+                 key={data.id || Math.random()}
+                 style={this.getMarkerStyle(data.total_confirmed)}>
         <View style={this.getCircleStyle(data.total_confirmed)}>
           <Text style={this.getTextCircleStyle(data.total_confirmed)}>{data.total_confirmed}</Text>
         </View>
@@ -172,7 +194,7 @@ class MapComponent extends React.Component {
           location.location = {
             latitude: parseFloat(location.location.latitude.toString()),
             longitude: parseFloat(location.location.longitude.toString()),
-          }
+          };
           return location;
         })}
         initialRegion={INIT_REGION}

@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Text} from '@ui-kitten/components';
+import {Button, List, ListItem, Text} from '@ui-kitten/components';
 import VirusDataRepository from '../repos/VirusDataRepository';
 
 class ListComponent extends React.Component {
@@ -16,17 +16,15 @@ class ListComponent extends React.Component {
   componentDidMount() {
     VirusDataRepository.all()
       .then(response => {
-        // let counts = response.data.map((location) => {
-        //   return location.total_confirmed;
-        // });
-
-        // this.min = Math.min(...counts);
-        // this.max = Math.max(...counts);
-
         this.setState({
-          data: response.data.map((location) => {
+          data: response.map((location) => {
             // console.log(location);
-          }),
+            return {
+              title: location.country,
+              location: location,
+            }
+          }).sort((a, b) => parseFloat(b.location.total_confirmed) - parseFloat(a.location.total_confirmed))
+            .filter((location) => location.location.total_confirmed > 0 || location.location.total_recovered > 0 || location.location.total_deaths > 0 ),
           loading: false,
         });
       })
@@ -35,11 +33,51 @@ class ListComponent extends React.Component {
       });
   }
 
+  renderItemAccessory = (style, index) => {
+    // console.log(style)
+    let location = this.state.data[index].location;
+
+    return (
+      <View style={{
+        ...style,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+      }}>
+        <Text style={{
+          marginRight: 10,
+          color: 'red'
+        }}>{location.total_confirmed}</Text>
+        <Text  style={{
+          marginRight: 10,
+          color: 'green'
+        }}>{location.total_recovered}</Text>
+        <Text style={{
+          color: 'black'
+        }}>{location.total_deaths}</Text>
+      </View>
+    )
+    // <Button style={style}>FOLLOW</Button>
+  };
+
+
+  renderItem = ({ item, index }) => (
+    <ListItem
+      title={`${item.title}`}
+      // description={`${item.description} ${index + 1}`}
+      // icon={renderItemIcon}
+      accessory={this.renderItemAccessory}
+    />
+  );
+
   render() {
     if (this.state.loading) return <Text>Loading...</Text>;
 
     return (
-      <Text>test</Text>
+      <List
+        data={this.state.data}
+        renderItem={this.renderItem}
+      />
     );
   }
 }
