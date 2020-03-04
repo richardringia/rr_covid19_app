@@ -4,7 +4,7 @@ import {Button, List, ListItem, Text} from '@ui-kitten/components';
 import VirusDataRepository from '../repos/VirusDataRepository';
 
 class ListComponent extends React.Component {
-  constructor(props) {
+  constructor(props, { navigation }) {
     super(props);
 
     this.state = {
@@ -14,13 +14,12 @@ class ListComponent extends React.Component {
   }
 
   componentDidMount() {
-    VirusDataRepository.all()
+    VirusDataRepository.allByCountry()
       .then(response => {
         this.setState({
           data: response.map((location) => {
-            // console.log(location);
             return {
-              title: location.country,
+              title: location.country.name,
               location: location,
             }
           }).sort((a, b) => parseFloat(b.location.total_confirmed) - parseFloat(a.location.total_confirmed))
@@ -64,6 +63,7 @@ class ListComponent extends React.Component {
   renderItem = ({ item, index }) => (
     <ListItem
       title={`${item.title}`}
+      // onPress={() => this.props.navigation.navigate('Detail', {title: item.title})}
       // description={`${item.description} ${index + 1}`}
       // icon={renderItemIcon}
       accessory={this.renderItemAccessory}

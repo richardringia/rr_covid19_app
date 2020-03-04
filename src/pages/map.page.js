@@ -4,8 +4,8 @@ import {SafeAreaView} from "react-native"
 import MapComponent from '../components/map.component';
 
 class MapPage extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
   render() {
     return (

@@ -6,6 +6,8 @@ import { BottomNavigation, BottomNavigationTab, Layout, Text } from '@ui-kitten/
 import MapPage from "../pages/map.page";
 import ListPage from "../pages/list.page";
 import { StyleSheet } from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
+import DetailPage from '../pages/detail.page';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -20,6 +22,9 @@ const OrdersScreen = () => (
         <Text category='h1'>ORDERS</Text>
     </Layout>
 );
+
+const Stack = createStackNavigator();
+
 
 const BottomTabBar = ({ navigation, state }) => {
 
@@ -40,6 +45,13 @@ const BottomTabBar = ({ navigation, state }) => {
         </SafeAreaView>
     );
 };
+
+const ListNavigator = ({navigation}) => (
+  <Stack.Navigator headerMode='none'>
+    <Stack.Screen name='List' component={ListPage}/>
+    <Stack.Screen name='Detail' component={DetailPage}/>
+  </Stack.Navigator>
+);
 
 const TabNavigator = () => (
     <BottomTab.Navigator tabBar={props => <BottomTabBar {...props} />} >
