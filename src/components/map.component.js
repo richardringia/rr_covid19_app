@@ -32,15 +32,21 @@ class MapComponent extends React.Component {
 
   componentDidMount() {
 
-    VirusDataRepository.all()
+    VirusDataRepository.data()
       .then(response => {
-        let counts = response.map((location) => {
+        let states = [];
+        response.forEach((country, index) => {
+          country.states.forEach((state, stateIndex) => {
+            states.push(state);
+          });
+        });
+        let counts = states.map((location) => {
           return location.total_confirmed;
         });
 
         this.mapHelper = new MapHelper(Math.min(...counts), Math.max(...counts));
 
-        this.setState({data: response, loading: false});
+        this.setState({data: states, loading: false});
       })
       .catch(reason => {
         // TODO: CREATE ERROR MESSAGE
@@ -58,8 +64,8 @@ class MapComponent extends React.Component {
         style={{flex: 1}}
         data={this.state.data.map((location) => {
           location.location = {
-            latitude: parseFloat(location.location.latitude.toString()),
-            longitude: parseFloat(location.location.longitude.toString()),
+            latitude: parseFloat(location.lat.toString()),
+            longitude: parseFloat(location.lng.toString()),
           };
           return location;
         })}

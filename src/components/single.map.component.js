@@ -33,7 +33,7 @@ class SingleMapComponent extends React.Component {
 
   renderCard = (state) => {
     return (
-      <ListCardComponent id={state.id} name={state.state.name} total_confirmed={state.total_confirmed}
+      <ListCardComponent key={state.id} name={state.name} total_confirmed={state.total_confirmed}
                          total_deaths={state.total_deaths} total_recovered={state.total_recovered}/>
     );
   };
@@ -46,21 +46,23 @@ class SingleMapComponent extends React.Component {
     return (
       <View style={{flex: 1}}>
         {
-          location.country.lat != null && location.country.lng != null ?
+          location.lat != null && location.lng != null ?
             <View style={{width: '100%', height: 250}}>
               <ClusteredMapView
                 style={{flex: 1}}
                 initialRegion={{
-                  latitude: parseFloat(location.country.lat),
-                  longitude: parseFloat(location.country.lng),
+                  latitude: parseFloat(location.lat.toString()),
+                  longitude: parseFloat(location.lng.toString()),
                   latitudeDelta: 40,
                   longitudeDelta: 40,
                 }}
                 data={location.states.map((state => {
                   return {
                     ...state,
-                    latitude: parseFloat(state.location.latitude.toString()),
-                    longitude: parseFloat(state.location.longitude.toString()),
+                    location: {
+                      latitude: parseFloat(state.lat.toString()),
+                      longitude: parseFloat(state.lng.toString()),
+                    }
                   };
                 }))}
                 ref={this.mapHelper.ref}

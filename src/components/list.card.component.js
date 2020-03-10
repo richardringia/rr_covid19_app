@@ -18,7 +18,7 @@ class ListCardComponent extends React.Component {
 
   render() {
     return (
-      <Card {...this.props} key={this.props.id} header={() => this.header(this.props.name)} style={{
+      <Card {...this.props} header={() => this.header(this.props.name)} style={{
         marginVertical: 8,
       }}>
         <View>
@@ -32,7 +32,6 @@ class ListCardComponent extends React.Component {
 
 }
 ListCardComponent.propTypes = {
-  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   total_confirmed: PropTypes.number.isRequired,
   total_deaths: PropTypes.number.isRequired,

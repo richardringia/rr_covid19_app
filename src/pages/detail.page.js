@@ -30,8 +30,8 @@ class DetailPage extends React.Component {
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <TopNavigation title={item.title} alignment='center'  titleStyle={{color: 'rgb(0,101,50)'}}  leftControl={this.BackAction()}/>
-        <SingleMapComponent location={item.location} />
+        <TopNavigation title={item.name} alignment='center'  titleStyle={{color: 'rgb(0,101,50)'}}  leftControl={this.BackAction()}/>
+        <SingleMapComponent location={item} />
       </SafeAreaView>
     );
   }

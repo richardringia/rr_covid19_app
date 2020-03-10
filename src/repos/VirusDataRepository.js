@@ -10,7 +10,7 @@ export default class VirusDataRepository {
     // 'authorization': '9d39a8-8dec29-d455ee-23a1a2-863bc1',
     'authorization': '3f46fe-d0b0a9-8a2d83-85095d-5d8623',
   };
-  static existingDataEnabled = false;
+  static existingDataEnabled = true;
 
   static getDateParam(prefix) {
     let dateParam = '';
@@ -29,70 +29,26 @@ export default class VirusDataRepository {
     return 'covid-19-' + prefix + '-data-updated-date';
   }
 
-  static async all() {
+  static async data() {
     await SyncStorage.init();
     let prefix = 'all';
-    return new Promise((resolve, reject) => {
-      let dateParam = this.getDateParam(prefix);
-
-      axios.get(VirusDataRepository.url + '/all' + dateParam, {
-        headers: VirusDataRepository.header,
-      })
-        .then(response => {
-
-          let data = response.data;
-
-          if (data.covid !== undefined && data.updated !== undefined && data.updated === true) {
-            SyncStorage.set(VirusDataRepository.getStorageName(prefix), JSON.stringify(data.covid));
-            SyncStorage.set(VirusDataRepository.getUpdatedDateName(prefix), new Date().toString());
-
-            console.log('Saving new data...');
-
-            resolve(data.covid);
-          } else {
-            let dataJson = SyncStorage.get(VirusDataRepository.getStorageName(prefix));
-            if (dataJson !== undefined) {
-              console.log('Getting existing data...');
-              let data = JSON.parse(dataJson);
-
-              if (data !== null || data !== '') {
-                resolve(data);
-              }
-            }
-          }
-
-          reject('no data found');
-
-        })
-        .catch(reason => {
-          console.log(reason);
-          console.log(reason.response);
-          //TODO: CREATE ERROR MESSAGE
-          reject(reason);
-        });
-    });
-  }
-
-  static async allByCountry() {
-    await SyncStorage.init();
-    let prefix = 'all-by-country';
 
     return new Promise((resolve, reject) => {
       let dateParam = this.getDateParam(prefix);
 
-      axios.get(VirusDataRepository.url + '/allbycountry' + dateParam, {
-        headers: VirusDataRepository.header,
+      axios.get(VirusDataRepository.url + '/data' + dateParam, {
+        headers: VirusDataRepository.header
       })
         .then(response => {
           let data = response.data;
 
-          if (data.countries !== undefined && data.updated !== undefined && data.updated === true) {
-            SyncStorage.set(VirusDataRepository.getStorageName(prefix), JSON.stringify(data.countries));
+          if (data.data !== undefined && data.updated !== undefined && data.updated === true) {
+            SyncStorage.set(VirusDataRepository.getStorageName(prefix), JSON.stringify(data.data));
             SyncStorage.set(VirusDataRepository.getUpdatedDateName(prefix), new Date().toString());
 
             console.log('Saving new data...');
 
-            resolve(data.countries);
+            resolve(data.data);
           } else {
             let dataJson = SyncStorage.get(VirusDataRepository.getStorageName(prefix));
             if (dataJson !== undefined) {
@@ -107,12 +63,13 @@ export default class VirusDataRepository {
 
             reject('no data found');
           }
-        }).catch(reason => {
-        console.log(reason);
-        console.log(reason.response);
-        //TODO: CREATE ERROR MESSAGE
-        reject(reason);
-      });
-    });
+        })
+        .catch(reason => {
+          console.log(reason);
+          console.log(reason.response);
+          //TODO: CREATE ERROR MESSAGE
+          reject(reason);
+        })
+    })
   }
 }

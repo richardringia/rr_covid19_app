@@ -15,72 +15,42 @@ class ListComponent extends React.Component {
   }
 
   componentDidMount() {
-    VirusDataRepository.allByCountry()
+    // VirusDataRepository.allByCountry()
+    //   .then(response => {
+    //     this.setState({
+    //       data: response.map((location) => {
+    //         return {
+    //           title: location.country.name,
+    //           location: location,
+    //         };
+    //       }).sort((a, b) => parseFloat(b.location.total_confirmed) - parseFloat(a.location.total_confirmed))
+    //         .filter((location) => location.location.total_confirmed > 0 || location.location.total_recovered > 0 || location.location.total_deaths > 0),
+    //       loading: false,
+    //     });
+    //   })
+    //   .catch(reason => {
+    //     // TODO: CREATE ERROR MESSAGE
+    //   });
+
+    VirusDataRepository.data()
       .then(response => {
         this.setState({
-          data: response.map((location) => {
-            return {
-              title: location.country.name,
-              location: location,
-            };
-          }).sort((a, b) => parseFloat(b.location.total_confirmed) - parseFloat(a.location.total_confirmed))
-            .filter((location) => location.location.total_confirmed > 0 || location.location.total_recovered > 0 || location.location.total_deaths > 0),
-          loading: false,
-        });
+          data: response.sort((a, b) => parseFloat(b.total_confirmed) - parseFloat(a.total_confirmed))
+            .filter((state) => state.total_confirmed > 0),
+          loading: false
+        })
       })
       .catch(reason => {
         // TODO: CREATE ERROR MESSAGE
       });
   }
 
-  renderItemAccessory = (style, index) => {
-    let location = this.state.data[index].location;
-
+  renderCard(state, index) {
     return (
-      <View style={{
-        ...style,
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-      }}>
-        <Text style={{
-          marginRight: 10,
-          color: 'red',
-        }}>{location.total_confirmed}</Text>
-        <Text style={{
-          marginRight: 10,
-          color: 'green',
-        }}>{location.total_recovered}</Text>
-        <Text style={{
-          color: 'black',
-        }}>{location.total_deaths}</Text>
-      </View>
-    );
-    // <Button style={style}>FOLLOW</Button>
-  };
-
-
-  renderItem = ({item, index}) => (
-    <ListItem
-      title={`${item.title}`}
-      onPress={() => {
-        this.props.navigation.navigate('Detail', {item: item});
-        // if (item.location.country.lat != null && item.location.country.lng != null) {
-        //   this.props.navigation.navigate('Detail', {item: item});
-        // }
-      }}
-      // description={`${item.description} ${index + 1}`}
-      // icon={renderItemIcon}
-      accessory={this.renderItemAccessory}
-    />
-  );
-
-  renderCard(item, index) {
-    return (
-      <ListCardComponent id={index} name={item.title} total_confirmed={item.location.total_confirmed}
-                         total_deaths={item.location.total_deaths} total_recovered={item.location.total_recovered}
+      <ListCardComponent key={index} name={state.name} total_confirmed={state.total_confirmed}
+                         total_deaths={state.total_deaths} total_recovered={state.total_recovered}
                          onPress={() => {
-        this.props.navigation.navigate('Detail', {item: item});
+        this.props.navigation.navigate('Detail', {item: state});
       }}/>
     )
   }
@@ -90,10 +60,6 @@ class ListComponent extends React.Component {
   render() {
     if (this.state.loading) return <Text>Loading...</Text>;
     return (
-      // <List
-      //   data={this.state.data}
-      //   renderItem={this.renderItem}
-      // />
       <ScrollView
         style={{
           flex: 1,
