@@ -3,6 +3,7 @@ import {View, ScrollView} from 'react-native';
 import {Button, List, ListItem, Text} from '@ui-kitten/components';
 import VirusDataRepository from '../repos/VirusDataRepository';
 import ListCardComponent from './list.card.component';
+import LazyLoadingScrollViewComponent from './lazy.loading.scroll.view.component';
 
 class ListComponent extends React.Component {
   constructor(props, {navigation}) {
@@ -37,8 +38,8 @@ class ListComponent extends React.Component {
         this.setState({
           data: response.sort((a, b) => parseFloat(b.total_confirmed) - parseFloat(a.total_confirmed))
             .filter((state) => state.total_confirmed > 0),
-          loading: false
-        })
+          loading: false,
+        });
       })
       .catch(reason => {
         // TODO: CREATE ERROR MESSAGE
@@ -50,26 +51,20 @@ class ListComponent extends React.Component {
       <ListCardComponent key={index} name={state.name} total_confirmed={state.total_confirmed}
                          total_deaths={state.total_deaths} total_recovered={state.total_recovered}
                          onPress={() => {
-        this.props.navigation.navigate('Detail', {item: state});
-      }}/>
-    )
+                           this.props.navigation.navigate('Detail', {item: state});
+                         }}/>
+    );
   }
-
 
 
   render() {
     if (this.state.loading) return <Text>Loading...</Text>;
     return (
-      <ScrollView
-        style={{
-          flex: 1,
-          marginHorizontal: 8,
-        }}>
+      <LazyLoadingScrollViewComponent>
         {this.state.data.map((item, index) => {
           return this.renderCard(item, index);
         })}
-
-      </ScrollView>
+      </LazyLoadingScrollViewComponent>
     );
   }
 }

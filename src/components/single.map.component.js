@@ -6,6 +6,7 @@ import ClusteredMapView from 'react-native-maps-super-cluster';
 import MapHelper from '../helpers/map.helper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ListCardComponent from './list.card.component';
+import LazyLoadingScrollViewComponent from './lazy.loading.scroll.view.component';
 
 class SingleMapComponent extends React.Component {
 
@@ -76,13 +77,9 @@ class SingleMapComponent extends React.Component {
             :
             null
         }
-
-        <ScrollView style={{
-          flex: 1,
-          marginHorizontal: 8,
-        }}>
+        <LazyLoadingScrollViewComponent>
           {location.states.map(this.renderCard)}
-        </ScrollView>
+        </LazyLoadingScrollViewComponent>
       </View>
     );
   }
