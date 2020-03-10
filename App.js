@@ -20,7 +20,7 @@ import {
   mapping,
   light as theme,
 } from '@eva-design/eva';
-import {AppNavigator} from './src/navigation/BottomNavigation';
+import {AppNavigator} from './src/navigation/AppNavigation';
 
 
 const App = () => (

@@ -4,13 +4,13 @@ import SyncStorage from 'sync-storage';
 
 export default class VirusDataRepository {
 
-  static url = 'https://covid-19-api.richardringia.com/api/virus';
-  // static url = 'http://127.0.0.1:8000/api/virus';
+  // static url = 'https://covid-19-api.richardringia.com/api/virus';
+  static url = 'http://127.0.0.1:8000/api/virus';
   static header = {
-    'authorization': '9d39a8-8dec29-d455ee-23a1a2-863bc1',
-    // 'authorization': '3f46fe-d0b0a9-8a2d83-85095d-5d8623',
+    // 'authorization': '9d39a8-8dec29-d455ee-23a1a2-863bc1',
+    'authorization': '3f46fe-d0b0a9-8a2d83-85095d-5d8623',
   };
-  static existingDataEnabled = true;
+  static existingDataEnabled = false;
 
   static getDateParam(prefix) {
     let dateParam = '';

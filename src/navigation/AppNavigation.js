@@ -46,9 +46,9 @@ const BottomTabBar = ({ navigation, state }) => {
     );
 };
 
-const ListNavigator = ({navigation}) => (
+const ListNavigator = () => (
   <Stack.Navigator headerMode='none'>
-    <Stack.Screen name='List' component={ListPage}/>
+    <Stack.Screen name='Home' component={TabNavigator}/>
     <Stack.Screen name='Detail' component={DetailPage}/>
   </Stack.Navigator>
 );
@@ -68,6 +68,6 @@ const styles = StyleSheet.create({
 
 export const AppNavigator = () => (
     <NavigationContainer>
-        <TabNavigator/>
+        <ListNavigator/>
     </NavigationContainer>
 );

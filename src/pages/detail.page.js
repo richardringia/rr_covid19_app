@@ -3,6 +3,7 @@ import {SafeAreaView} from 'react-native';
 import {Icon, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import ListComponent from '../components/list.component';
 import PropTypes from 'prop-types';
+import SingleMapComponent from '../components/single.map.component';
 
 class DetailPage extends React.Component {
   constructor(props) {
@@ -25,16 +26,19 @@ class DetailPage extends React.Component {
 
 
   render() {
+    const {item} = this.props.route.params;
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <TopNavigation title={this.props.route.params.title} alignment='center'  titleStyle={{color: 'rgb(0,101,50)'}}  leftControl={this.BackAction()}/>
+        <TopNavigation title={item.title} alignment='center'  titleStyle={{color: 'rgb(0,101,50)'}}  leftControl={this.BackAction()}/>
+        <SingleMapComponent location={item.location} />
       </SafeAreaView>
     );
   }
 }
 
-DetailPage.propTypes = {
-  title: PropTypes.string.isRequired
-};
+// DetailPage.propTypes = {
+//   title: PropTypes.string.isRequired
+// };
 
 export default DetailPage;
