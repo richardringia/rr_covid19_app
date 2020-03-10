@@ -54,8 +54,8 @@ class SingleMapComponent extends React.Component {
                 initialRegion={{
                   latitude: parseFloat(location.lat.toString()),
                   longitude: parseFloat(location.lng.toString()),
-                  latitudeDelta: 40,
-                  longitudeDelta: 40,
+                  latitudeDelta: location.lanDelta != null ? parseFloat(location.lanDelta.toString()) : 40,
+                  longitudeDelta: location.lngDelta != null ? parseFloat(location.lngDelta.toString()) : 40,
                 }}
                 data={location.states.map((state => {
                   return {

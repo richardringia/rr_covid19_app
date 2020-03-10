@@ -31,7 +31,7 @@ export default class VirusDataRepository {
 
   static async data() {
     await SyncStorage.init();
-    let prefix = 'all';
+    let prefix = 'all-v2';
 
     return new Promise((resolve, reject) => {
       let dateParam = this.getDateParam(prefix);
